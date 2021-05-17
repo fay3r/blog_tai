@@ -3,6 +3,9 @@ import config from './config';
 import cors from 'cors';
 import express from 'express';
 import morgan from 'morgan';
+import routes from './REST/routes'
+import mongoose from 'mongoose'
+import e from "express";
 
 const app = express();
 app.use(express.static(__dirname + '/public'));
@@ -14,6 +17,27 @@ app.use(bodyParser.json({limit: '2048kb'}));
 app.use(express.static('public'));
 
 app.use(cors());
+
+mongoose.connect(config.databaseUrl, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false },
+    (error) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.info('Connected with database established');
+  }
+});
+
+process.on('SIGINT', () => {
+  mongoose.connection.close(function (){
+    console.error("Closes - app terminated");
+    process.exit(0);
+  })
+})
+
+routes(app);
 
 app.get('/*', function (req, res) {
   res.sendFile(__dirname + '/public/index.html');
