@@ -1,3 +1,3 @@
 # node_pattern
 
-https://g3blogtai.herokuapp.com/#
+https://g3blogtai.herokuapp.com/
